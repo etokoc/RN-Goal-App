@@ -1,20 +1,82 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList } from 'react-native';
+import Toast from 'react-native-toast-message';
+import GoalItem from './components/GoalItem';
 
 export default function App() {
+
+  const [enteredGoalText, setEnteredGoalText] = useState('');
+  const [courseGoals, setCountCourseGoals] = useState([]);
+
+  function goalInputHandler(enteredText) {
+    if (enteredText != null && enteredText.trim() != '') {
+      setEnteredGoalText(enteredText);
+    }
+  }
+
+  function addGoalHandler() {
+    if (enteredGoalText.trim() !== '') {
+      setCountCourseGoals(currentGoals => {
+        return [...currentGoals, enteredGoalText];
+      });
+      setEnteredGoalText('');
+
+      Toast.show({
+        type: 'success',
+        text1: 'Başarılı!',
+        text2: `"${enteredGoalText}" hedefi eklendi`,
+        position: 'bottom',
+        visibilityTime: 3000,
+      });
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <View style={styles.headerContainer}><Text style={styles.headerText}>Goal App</Text></View>
+      <GoalInput onTextChanged={goalInputHandler} enteredText={enteredGoalText} onAddGoal={addGoalHandler}/>
+      <View style={styles.goalsContainer}>
+        <FlatList data={courseGoals} renderItem={(itemData) => {
+          return <GoalItem index={itemData.index} text={itemData.item} />
+        }}
+        />
+      </View>
+
       <StatusBar style="auto" />
+      <Toast />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  headerContainer: {
+    alignItems: "center",
+    marginVertical: 16,
   },
+  headerText: {
+    fontSize: 24,
+    color: "white",
+    fontWeight: 600
+  },
+  container: {
+    paddingTop: 50,
+    flex: 1,
+    backgroundColor: "#2B303A",
+  },
+  goalsContainer: {
+    flex: 4,
+    marginTop: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
+    backgroundColor: "#c9f0ff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
+  }
 });
