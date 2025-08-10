@@ -3,24 +3,18 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList } from 'react-native';
 import Toast from 'react-native-toast-message';
 import GoalItem from './components/GoalItem';
-
+import GoalInput from './components/GoalInput';
 export default function App() {
 
-  const [enteredGoalText, setEnteredGoalText] = useState('');
   const [courseGoals, setCountCourseGoals] = useState([]);
 
-  function goalInputHandler(enteredText) {
-    if (enteredText != null && enteredText.trim() != '') {
-      setEnteredGoalText(enteredText);
-    }
-  }
 
-  function addGoalHandler() {
+
+  function addGoalHandler(enteredGoalText) {
     if (enteredGoalText.trim() !== '') {
       setCountCourseGoals(currentGoals => {
         return [...currentGoals, enteredGoalText];
       });
-      setEnteredGoalText('');
 
       Toast.show({
         type: 'success',
@@ -35,7 +29,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}><Text style={styles.headerText}>Goal App</Text></View>
-      <GoalInput onTextChanged={goalInputHandler} enteredText={enteredGoalText} onAddGoal={addGoalHandler}/>
+      <GoalInput onAddGoal={addGoalHandler} />
       <View style={styles.goalsContainer}>
         <FlatList data={courseGoals} renderItem={(itemData) => {
           return <GoalItem index={itemData.index} text={itemData.item} />
