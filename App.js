@@ -8,22 +8,27 @@ export default function App() {
 
   const [courseGoals, setCountCourseGoals] = useState([]);
 
-
-
   function addGoalHandler(enteredGoalText) {
     if (enteredGoalText.trim() !== '') {
+      let _id = Math.random().toString();
       setCountCourseGoals(currentGoals => {
-        return [...currentGoals, enteredGoalText];
+        return [...currentGoals, { text: enteredGoalText, id: _id }];
       });
 
       Toast.show({
         type: 'success',
         text1: 'Başarılı!',
-        text2: `"${enteredGoalText}" hedefi eklendi`,
+        text2: `"${enteredGoalText} ${_id}" hedefi eklendi`,
         position: 'bottom',
         visibilityTime: 3000,
       });
     }
+  }
+
+  function deleteGoalHandler(id) {
+    setCountCourseGoals(currentGoals => {
+      return currentGoals.filter((goal) => goal.id !== id)
+    });
   }
 
   return (
@@ -32,7 +37,8 @@ export default function App() {
       <GoalInput onAddGoal={addGoalHandler} />
       <View style={styles.goalsContainer}>
         <FlatList data={courseGoals} renderItem={(itemData) => {
-          return <GoalItem index={itemData.index} text={itemData.item} />
+          return <GoalItem index={itemData.item.id} text={itemData.item.text}
+            onDeleteItem={deleteGoalHandler} />
         }}
         />
       </View>
