@@ -13,6 +13,10 @@ export default function App() {
     setModalVisible(true);
   }
 
+  function closeModalHandler() {
+    setModalVisible(false);
+  }
+
   function addGoalHandler(enteredGoalText) {
     if (enteredGoalText.trim() !== '') {
       let _id = Math.random().toString();
@@ -23,15 +27,13 @@ export default function App() {
       Toast.show({
         type: 'success',
         text1: 'Başarılı!',
-        text2: `"${enteredGoalText} ${_id}" hedefi eklendi`,
+        text2: `"${enteredGoalText}" hedefi eklendi`,
         position: 'bottom',
         visibilityTime: 3000,
       });
+      
+      closeModalHandler();
     }
-  }
-
-  function modalVisibleHandler() {
-    setModalVisible(!modalVisible);
   }
 
   function deleteGoalHandler(id) {
@@ -47,9 +49,9 @@ export default function App() {
         <Text style={styles.headerText}>Goal App</Text>
       </View>
       <Button title='Add Goal' style={styles.button} onPress={modalVisibleHandler} />
-      <GoalInput onAddGoal={addGoalHandler} modalVisible={modalVisible} onCancel={modalVisibleHandler} />
+      <GoalInput onAddGoal={addGoalHandler} modalVisible={modalVisible} onCancel={closeModalHandler} />
       <View style={styles.goalsContainer}>
-        <FlatList data={courseGoals} renƒderItem={(itemData) => {
+        <FlatList data={courseGoals} renderItem={(itemData) => {
           return <GoalItem index={itemData.item.id} text={itemData.item.text}
             onDeleteItem={deleteGoalHandler} />
         }}
